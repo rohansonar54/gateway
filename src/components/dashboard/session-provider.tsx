@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { getCookie, setCookie } from "@/lib/client-cookie";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useSession as useNextAuthSession } from "next-auth/react";
 
 interface Session {
@@ -61,12 +61,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const pathname = usePathname();
+
     useEffect(() => {
         // Wait for NextAuth session to be authenticated before fetching
-        // This prevents 401 errors in Network log on initial dashboard load
         if (authStatus !== "authenticated") return;
         fetchSessions();
-    }, [authStatus]);
+    }, [authStatus, pathname]);
 
     const setSessionId = (id: string) => {
         setSessionIdState(id);
