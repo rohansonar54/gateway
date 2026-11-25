@@ -114,6 +114,11 @@ export const bindSessionStore = (sock: WASocket, sessionId: string, io: Server |
     sock.ev.on('messaging-history.set', async ({ messages, chats, contacts, isLatest }) => {
         logger.info("Store", `History sync: ${messages?.length || 0} msgs, ${contacts?.length || 0} contacts`);
 
+        if (process.env.DISABLE_MESSAGE_STORAGE === "true") {
+            logger.info("Store", "Skipping history message database sync (DISABLE_MESSAGE_STORAGE is enabled)");
+            return;
+        }
+
         // Ensure we have the database session ID
         if (!dbSessionId) {
             const session = await prisma.session.findUnique({ where: { sessionId }, select: { id: true } });
@@ -552,10 +557,29 @@ async function processAndSaveMessage(
 
     // Download Media First (to save URL to DB)
     let fileUrl: string | null = null;
-    try {
-        fileUrl = await downloadAndSaveMedia(msg, sessionId);
-    } catch (e) {
-        logger.error("Store", "Error downloading media in store", e);
+    if (process.env.DISABLE_MESSAGE_STORAGE !== "true") {
+        try {
+            fileUrl = await downloadAndSaveMedia(msg, sessionId);
+        } catch (e) {
+            logger.error("Store", "Error downloading media in store", e);
+        }
+    }
+
+    if (process.env.DISABLE_MESSAGE_STORAGE === "true") {
+        return {
+            id: keyId,
+            sessionId: dbSessionId,
+            remoteJid: normalizeJid(normalizedRemoteJid),
+            senderJid,
+            fromMe: fromMe || false,
+            keyId,
+            pushName,
+            type: messageType as any,
+            content: text,
+            mediaUrl: null,
+            status: fromMe ? "SENT" : "PENDING",
+            timestamp
+        };
     }
 
     try {
