@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
 import { SessionSelector } from "@/components/dashboard/session-selector";
+import { ApiKeyPopover } from "@/components/dashboard/api-key-popover";
 import { Button } from "@/components/ui/button";
 import { RealtimeClock } from "@/components/dashboard/realtime-clock";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -174,6 +175,7 @@ export function Navbar({ appName }: NavbarProps) {
             <div className="flex items-center gap-2 sm:gap-4 min-w-0">
                 <span className="hidden sm:inline"><RealtimeClock /></span>
                 <SessionSelector />
+                <ApiKeyPopover />
                 <div className="h-6 w-px bg-border/50 hidden sm:block" />
 
                 <Popover open={isOpen} onOpenChange={setIsOpen}>

@@ -10,6 +10,7 @@ import { RefreshCw, Save, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { PaymentSettingsCard } from "@/components/dashboard/payment-settings";
 import { PlanEditorCard } from "@/components/dashboard/plan-editor";
+import { ApiKeyCard } from "@/components/dashboard/api-key-card";
 
 export default function SettingsPage() {
     const { data: authSession } = useSession();
@@ -86,8 +87,11 @@ export default function SettingsPage() {
         <div className="space-y-6">
             <div>
                 <h2 className="text-xl sm:text-3xl font-bold tracking-tight">Settings</h2>
-                <p className="text-muted-foreground text-sm mt-1">Global system configuration. Only SuperAdmins can make changes.</p>
+                <p className="text-muted-foreground text-sm mt-1">Global system configuration and API credentials.</p>
             </div>
+
+            {/* Gateway API Credentials Card */}
+            <ApiKeyCard />
 
             {!isSuperAdmin && (
                 <Card className="border-yellow-200 bg-yellow-50">
