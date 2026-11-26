@@ -29,7 +29,8 @@ import {
     ShieldCheck,
     SlidersHorizontal,
     BarChart3,
-    BellDot
+    BellDot,
+    Vote
 } from "lucide-react";
 import { useSidebar } from "./sidebar-context";
 import {
@@ -67,6 +68,7 @@ const navGroups: NavGroup[] = [
         items: [
             { href: "/dashboard/chat", label: "Chat", icon: Inbox },
             { href: "/dashboard/broadcast", label: "Broadcast", icon: Zap, capability: "broadcast" },
+            { href: "/dashboard/polls", label: "Polls & Menus", icon: Vote },
             { href: "/dashboard/sticker", label: "Sticker Maker", icon: Sparkles, capability: "sticker" },
         ],
     },
